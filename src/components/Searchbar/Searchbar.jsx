@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   SearchBarContainer,
@@ -8,40 +8,38 @@ import {
   SearchInput,
 } from './Searchbar.styled';
 
-export class SearchBar extends Component {
-  state = {
-    q: '',
-  };
-  handleQuery = e => {
-    this.setState({
-      q: e.currentTarget.value.toLowerCase(),
-    });
+export const SearchBar = ({ onSubmit }) => {
+  const [q, setQ] = useState(' ');
+
+  const handleQuery = e => {
+    setQ(e.currentTarget.value.toLowerCase());
   };
 
-  sendResult = e => {
+  const sendResult = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state);
-  };
-  render() {
-    return (
-      <SearchBarContainer>
-        <SearchForm onSubmit={this.sendResult}>
-          <SearchButton type="submit">
-            <SearchButtonLabel>Search</SearchButtonLabel>
-          </SearchButton>
 
-          <SearchInput
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeHolder="Search images and photos"
-            onChange={this.handleQuery}
-          />
-        </SearchForm>
-      </SearchBarContainer>
-    );
-  }
-}
+    onSubmit(q);
+  };
+
+  return (
+    <SearchBarContainer>
+      <SearchForm onSubmit={sendResult}>
+        <SearchButton type="submit">
+          <SearchButtonLabel>Search</SearchButtonLabel>
+        </SearchButton>
+
+        <SearchInput
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleQuery}
+        />
+      </SearchForm>
+    </SearchBarContainer>
+  );
+};
+
 SearchBar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
